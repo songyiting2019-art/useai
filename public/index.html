@@ -1,0 +1,429 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>帮我问 AI</title>
+    <style>
+      body {
+        margin: 0;
+        font-family: Arial, "Microsoft YaHei", sans-serif;
+        background: #f5f7fa;
+        color: #1f2937;
+      }
+
+      .app {
+        max-width: 880px;
+        margin: 0 auto;
+        padding: 44px 20px;
+      }
+
+      .hero {
+        margin-bottom: 26px;
+        text-align: center;
+      }
+
+      h1 {
+        margin: 0 0 10px;
+        font-size: 30px;
+        font-weight: 700;
+      }
+
+      .subtitle {
+        margin: 0;
+        color: #5b6472;
+        font-size: 16px;
+        line-height: 1.7;
+      }
+
+      .panel {
+        padding: 20px;
+        background: #ffffff;
+        border: 1px solid #e5e7eb;
+        border-radius: 8px;
+      }
+
+      .inputPanel {
+        margin-bottom: 18px;
+      }
+
+      .label {
+        margin: 0 0 6px;
+        font-size: 17px;
+        font-weight: 700;
+      }
+
+      .hint {
+        margin: 0 0 14px;
+        color: #6b7280;
+        line-height: 1.7;
+      }
+
+      .scenes {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        margin-bottom: 14px;
+      }
+
+      .sceneButton {
+        min-width: auto;
+        padding: 8px 12px;
+        color: #374151;
+        background: #f3f4f6;
+        border: 1px solid #e5e7eb;
+        font-size: 14px;
+      }
+
+      .sceneButton:hover {
+        background: #eaf1ff;
+        border-color: #bfdbfe;
+        color: #1d4ed8;
+      }
+
+      textarea {
+        width: 100%;
+        min-height: 132px;
+        box-sizing: border-box;
+        padding: 14px;
+        font-size: 16px;
+        line-height: 1.65;
+        border: 1px solid #d1d5db;
+        border-radius: 8px;
+        outline: none;
+        resize: vertical;
+      }
+
+      textarea:focus {
+        border-color: #2563eb;
+        box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
+      }
+
+      .actions {
+        display: flex;
+        justify-content: flex-end;
+        gap: 10px;
+        margin-top: 12px;
+      }
+
+      button {
+        min-width: 120px;
+        padding: 11px 16px;
+        font-size: 15px;
+        color: #ffffff;
+        background: #2563eb;
+        border: 0;
+        border-radius: 8px;
+        cursor: pointer;
+      }
+
+      button:disabled {
+        background: #93a4c7;
+        cursor: not-allowed;
+      }
+
+      .output {
+        min-height: 180px;
+        line-height: 1.7;
+      }
+
+      .section {
+        margin-bottom: 22px;
+      }
+
+      .section:last-child {
+        margin-bottom: 0;
+      }
+
+      .section[hidden] {
+        display: none;
+      }
+
+      .resultHeader {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        margin-bottom: 10px;
+      }
+
+      .sectionTitle {
+        margin: 0;
+        font-size: 16px;
+        font-weight: 700;
+      }
+
+      .copyButton {
+        min-width: 108px;
+        width: auto;
+        flex: 0 0 auto;
+        padding: 8px 12px;
+        font-size: 14px;
+        background: #111827;
+      }
+
+      .answerBox {
+        margin: 0;
+        padding: 16px;
+        white-space: pre-wrap;
+        word-break: break-word;
+        line-height: 1.85;
+        background: #f9fafb;
+        border: 1px solid #e5e7eb;
+        border-radius: 8px;
+        font-family: Arial, "Microsoft YaHei", sans-serif;
+        font-size: 15px;
+      }
+
+      .optionalTitle {
+        margin: 0 0 10px;
+        font-size: 15px;
+        font-weight: 700;
+        color: #374151;
+      }
+
+      .optionalList {
+        margin: 0;
+        padding-left: 22px;
+        color: #4b5563;
+      }
+
+      .optionalList li {
+        margin: 6px 0;
+      }
+
+      .supplementBox {
+        margin-top: 14px;
+      }
+
+      .supplementBox[hidden] {
+        display: none;
+      }
+
+      .supplementHint {
+        margin: 0 0 8px;
+        color: #6b7280;
+        font-size: 14px;
+      }
+
+      .supplementBox textarea {
+        min-height: 92px;
+      }
+
+      .secondaryButton {
+        background: #0f766e;
+      }
+
+      @media (max-width: 640px) {
+        .app {
+          padding: 28px 14px;
+        }
+
+        .panel {
+          padding: 16px;
+        }
+
+        h1 {
+          font-size: 26px;
+        }
+
+        .actions {
+          justify-content: stretch;
+        }
+
+        .actions button {
+          width: 100%;
+        }
+
+        .copyButton {
+          min-width: 96px;
+          width: auto;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <main class="app">
+      <header class="hero">
+        <h1>帮我问 AI</h1>
+        <p class="subtitle">不知道怎么问 AI？随便写一句话，我帮你整理成更清楚的问法。</p>
+      </header>
+
+      <section class="panel inputPanel">
+        <p class="label">你想让 AI 帮你做什么？</p>
+        <p class="hint">随便写一句话就行，比如：帮我写一段生日祝福，发给我妹妹。</p>
+
+        <div class="scenes" aria-label="常用场景">
+          <button class="sceneButton" type="button" data-example="帮我写一段适合发朋友圈的话，语气自然一点">写一段话</button>
+          <button class="sceneButton" type="button" data-example="帮我把这段话改得更礼貌、更自然">改一段话</button>
+          <button class="sceneButton" type="button" data-example="给我妈写一段生日祝福，温暖一点，不要太肉麻">写祝福</button>
+          <button class="sceneButton" type="button" data-example="帮我写一份简短礼貌的请假条">写请假/通知</button>
+          <button class="sceneButton" type="button" data-example="帮我做一个周末家庭出游计划">做计划</button>
+          <button class="sceneButton" type="button" data-example="帮我整理一下怎么问 AI：我最近睡不好怎么办">问问题</button>
+        </div>
+
+        <textarea id="input" placeholder="比如：帮我把这段话改得更礼貌一点"></textarea>
+        <div class="actions">
+          <button id="runButton">帮我问得更清楚</button>
+        </div>
+      </section>
+
+      <div class="panel output">
+        <section id="answerSection" class="section">
+          <div class="resultHeader">
+            <h2 class="sectionTitle">复制下面这段专业问法，粘贴到 AI 里就可以用</h2>
+            <button id="copyButton" class="copyButton" hidden>复制去问 AI</button>
+          </div>
+          <pre id="answerOutput" class="answerBox">整理好的问法会显示在这里。</pre>
+        </section>
+
+        <section id="optionalSection" class="section" hidden>
+          <p class="optionalTitle">想让结果更准确，你也可以补充：</p>
+          <ol id="optionalList" class="optionalList"></ol>
+          <div id="supplementBox" class="supplementBox" hidden>
+            <p class="supplementHint">可以简单补几句，也可以不填，直接重新整理。</p>
+            <textarea id="supplementInput" placeholder="可以在这里补充上面提到的信息，也可以不补充"></textarea>
+            <div class="actions">
+              <button id="supplementButton" class="secondaryButton">重新整理</button>
+            </div>
+          </div>
+        </section>
+      </div>
+    </main>
+
+    <script>
+      const inputEl = document.getElementById("input");
+      const runButton = document.getElementById("runButton");
+      const copyButton = document.getElementById("copyButton");
+      const answerOutput = document.getElementById("answerOutput");
+      const optionalSection = document.getElementById("optionalSection");
+      const optionalList = document.getElementById("optionalList");
+      const supplementBox = document.getElementById("supplementBox");
+      const supplementInput = document.getElementById("supplementInput");
+      const supplementButton = document.getElementById("supplementButton");
+      const sceneButtons = document.querySelectorAll(".sceneButton");
+
+      let latestAnswer = "";
+
+      function formatAnswer(text) {
+        return (text || "")
+          .replace(/\r\n/g, "\n")
+          .replace(/\*\*(.*?)\*\*/g, "$1")
+          .replace(/\s*(角色|目标|任务|我的需求|用户需求|已知信息|补充信息|要求|输出格式|注意事项)：/g, "\n\n$1：\n")
+          .replace(/\s*-\s+/g, "\n- ")
+          .replace(/\n{3,}/g, "\n\n")
+          .trim();
+      }
+
+      function renderOptionalInfo(items) {
+        optionalList.innerHTML = "";
+        const hasItems = Array.isArray(items) && items.length > 0;
+        optionalSection.hidden = !hasItems;
+        supplementBox.hidden = !hasItems;
+
+        if (!hasItems) return;
+
+        items.forEach((item) => {
+          const li = document.createElement("li");
+          li.textContent = item;
+          optionalList.appendChild(li);
+        });
+      }
+
+      function renderAnswer(text, options = {}) {
+        latestAnswer = formatAnswer(text);
+        answerOutput.textContent = latestAnswer || "整理好的问法会显示在这里。";
+        copyButton.hidden = !latestAnswer || options.copyable === false;
+        copyButton.textContent = "复制去问 AI";
+      }
+
+      sceneButtons.forEach((button) => {
+        button.addEventListener("click", () => {
+          const example = button.dataset.example || "";
+          inputEl.placeholder = `比如：${example}`;
+          if (!inputEl.value.trim()) {
+            inputEl.value = example;
+          }
+          supplementInput.value = "";
+          renderOptionalInfo([]);
+          inputEl.focus();
+        });
+      });
+
+      inputEl.addEventListener("input", () => {
+        if (!inputEl.value.trim()) {
+          supplementInput.value = "";
+          renderOptionalInfo([]);
+        }
+      });
+
+      async function organizeQuestion(options = {}) {
+        const input = inputEl.value.trim();
+        const supplement = options.useSupplement ? supplementInput.value.trim() : "";
+        const hideOptionalInfo = Boolean(options.hideOptionalInfo);
+
+        if (!input) {
+          renderOptionalInfo([]);
+          renderAnswer("请输入一句你想让AI帮你做什么", { copyable: false });
+          return;
+        }
+
+        const originalButtonText = runButton.textContent;
+        runButton.disabled = true;
+        supplementButton.disabled = true;
+        runButton.textContent = "正在整理...";
+        renderOptionalInfo([]);
+        renderAnswer("正在整理...", { copyable: false });
+        copyButton.hidden = true;
+
+        try {
+          const response = await fetch("/run", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ input, supplement, hideOptionalInfo }),
+          });
+
+          const data = await response.json();
+
+          if (!response.ok) {
+            renderOptionalInfo([]);
+            renderAnswer(data.result || "整理失败了，请稍后再试。", { copyable: false });
+            return;
+          }
+
+          renderAnswer(data.readyPrompt || data.result);
+          renderOptionalInfo(data.optionalInfo);
+        } catch (error) {
+          renderOptionalInfo([]);
+          renderAnswer("整理失败了，请稍后再试。", { copyable: false });
+        } finally {
+          runButton.disabled = false;
+          supplementButton.disabled = false;
+          runButton.textContent = originalButtonText;
+        }
+      }
+
+      runButton.addEventListener("click", async () => {
+        supplementInput.value = "";
+        await organizeQuestion();
+      });
+
+      supplementButton.addEventListener("click", async () => {
+        await organizeQuestion({ useSupplement: true, hideOptionalInfo: true });
+      });
+
+      copyButton.addEventListener("click", async () => {
+        if (!latestAnswer) return;
+
+        try {
+          await navigator.clipboard.writeText(latestAnswer);
+          copyButton.textContent = "已复制，可以去问 AI 了";
+        } catch (error) {
+          copyButton.textContent = "复制失败";
+        }
+      });
+    </script>
+  </body>
+</html>
