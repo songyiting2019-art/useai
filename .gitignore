@@ -1,0 +1,6 @@
+.env
+node_modules/
+.DS_Store
+__MACOSX/
+检查/
+归档.zip
